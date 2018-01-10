@@ -1,0 +1,91 @@
+import time 
+from decimal import Decimal 
+import locale 
+import math 
+ 
+locale.setlocale(locale.LC_ALL, 'de-DE') 
+ 
+cwidth = 80 
+first_last = ''.ljust(cwidth, '*') 
+padding = '**'.ljust(cwidth-2, ' ')+'**' 
+greeting1 = 'Willkommen zur Berechnung der Annuität' 
+greeting2 = 'Version: {v} vom {d}'.format(v='0.5', d=time.strftime("%d.%m.%Y")) 
+greeting3 = 'Fehler bitte an: {}'.format('Robin Filipiak (robin.filipiak@web.de)')
+format_string = '**{{0:^{0}}}**'.format(cwidth-4) 
+ 
+while True:
+
+
+    print(first_last) 
+    print(padding) 
+    print(format_string.format(greeting1)) 
+    print(format_string.format(greeting2)) 
+    print(format_string.format(greeting3)) 
+    print(padding) 
+    print(first_last) 
+ 
+    # Input and plausibility check of the loan 
+    while True:
+        input_string = input('Bitte geben Sie die Kreditsumme in Euro an: ') 
+        try: 
+            loan = Decimal(input_string) 
+            if loan <= 0: 
+                print('Die Kreditsumme muss größer als 0 sein.'.format(input_string)) 
+                print('Bitte versuchen Sie eine erneute Eingabe der Kreditsumme.')
+        except Exception:    
+            print ('Die Eingabe "{0}" ist keine Zahl.'.format(input_string)) 
+            print('Bitte versuchen Sie eine erneute Eingabe der Kreditsumme.')
+        if loan != 0:
+            break
+ 
+    # Input and plausibility check of the rate 
+    while True:
+        input_string = input('Bitte geben Sie den Zinssatz in % an: ') 
+        try: 
+            rate = Decimal(input_string)
+            if rate <= 0: 
+                print('Der Zinssatz muss größer als 0 sein.'.format(input_string)) 
+                print('Bitte versuchen Sie eine erneute Eingabe des Zinssatzes.')
+            if rate > 10.0:     
+                print('Warnung: Der Zinssatz beträgt mehr als 10%.'.format(input_string))
+                print('Trotz des überhöhten Zinssatzes wird das Programm fortfahren.')
+        except Exception:     
+            print('Die Eingabe "{0}" ist keine Zahl.'.format(input_string)) 
+            print('Bitte versuchen Sie eine erneute Eingabe des Zinssatzes.') 
+        if rate != 0:
+            rate = rate/Decimal(100)
+            break
+ 
+    # Input and plausibility check of the period 
+    while True:
+        input_string = input('Bitte geben Sie die Laufzeit in Jahren an: ') 
+        try: 
+            period = Decimal(input_string)   
+            if period <= 0: 
+                print('Die Laufzeit muss größer als 0 sein.'.format(input_string)) 
+                print('Bitte versuchen Sie eine erneute Eingabe der Laufzeit.')
+        except Exception:     
+            print('Die Eingabe "{0}" ist keine Zahl.'.format(input_string)) 
+            print('Bitte versuchen Sie eine erneute Eingabe der Laufzeit.')  
+        if period != 0:
+           break
+
+
+    help1 = Decimal(1) + rate 
+    help2 = help1 ** period 
+    annual = loan * (help2 * rate) / (help2 - 1)
+
+    print('Die Annuität beträgt: {0:>12}'.format(locale.currency((annual)))) 
+    print('Die Zinsen des Darlehens betragen: {0:>12}'.format(locale.currency((annual * period - loan))))
+
+    print('\n')
+    input_string = input('Wünschen Sie eine erneute Berechnung? Bitte geben Sie "Ja" ein falls dem so ist.' )
+    if input_string == 'Ja':
+        print('Das Programm wird erneut ausgeführt.')
+        print('\n')
+        print('\n')
+        print('\n')
+    else:
+        print('Vielen Dank für die Nutzung des Darlehensrechners.')
+        break
+exit()
